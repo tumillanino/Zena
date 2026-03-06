@@ -18,6 +18,7 @@ packages=(
   NetworkManager-wifi
   NetworkManager-wwan
   openconnect
+  spoofdpi
   vpnc
   wireguard-tools
   mobile-broadband-provider-info

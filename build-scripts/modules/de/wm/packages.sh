@@ -3,44 +3,33 @@ set -ouex pipefail
 shopt -s nullglob
 
 packages=(
+  adw-gtk3-theme
+  alacritty
+  cava
+  danksearch
+  dgop
+  dms
+  dms-greeter
   glycin-thumbnailer
-
+  kanshi
+  khal
+  kf6-kimageformats
+  nautilus
+  papirus-icon-theme
+  quickhell
   xdg-desktop-portal-gtk
   xdg-desktop-portal-gnome
-
-  kf6-kimageformats
-
-  gnome-keyring
-  gnome-keyring-pam
-
-  greetd
-  dms-greeter
-  greetd-selinux
-
-  dms
-  dgop
-  danksearch
-  quickshell
-  gtk4-layer-shell
-
-  adw-gtk3-theme
-  papirus-icon-theme
-
-  xwayland-satellite
-
-  khal
-  cava
   wl-clipboard
-
-  nautilus
-  alacritty
-  kanshi
 )
 dnf5 -y install "${packages[@]}" --exclude=matugen --exclude=noctalia-qs
 dnf5 -y install nautilus-python matugen --releasever=44 --disablerepo='*copr*'
 
 packages=(
+  gnome-keyring
+  gnome-keyring-pam
   mangowc
+  openssh‑askpass
+  pinentry-gnome3
 )
 
 dnf5 -y install "${packages[@]}" --setopt=install_weak_deps=False

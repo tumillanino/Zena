@@ -36,8 +36,22 @@ packages=(
 dnf5 -y install "${packages[@]}" --setopt=install_weak_deps=False
 
 XDG_EXT_TMPDIR="$(mktemp -d)"
-curl -fsSLo - "$(curl -fsSL https://api.github.com/repos/tulilirockz/xdg-terminal-exec-nautilus/releases/latest | jq -rc .tarball_url)" | tar -xzvf - -C "${XDG_EXT_TMPDIR}"
-install -Dpm0644 -t "/usr/share/nautilus-python/extensions/" "${XDG_EXT_TMPDIR}"/*/xdg-terminal-exec-nautilus.py
+XDG_EXT_PY="${XDG_EXT_TMPDIR}/xdg-terminal-exec-nautilus.py"
+
+for ref in main master; do
+  if curl -fsSL \
+    "https://raw.githubusercontent.com/tulilirockz/xdg-terminal-exec-nautilus/${ref}/xdg-terminal-exec-nautilus.py" \
+    -o "${XDG_EXT_PY}"; then
+    break
+  fi
+done
+
+if [[ ! -s "${XDG_EXT_PY}" ]]; then
+  echo "Failed to fetch xdg-terminal-exec-nautilus.py from GitHub" >&2
+  exit 1
+fi
+
+install -Dpm0644 -t "/usr/share/nautilus-python/extensions/" "${XDG_EXT_PY}"
 rm -rf "${XDG_EXT_TMPDIR}"
 
 dconf update

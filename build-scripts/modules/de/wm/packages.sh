@@ -11,6 +11,7 @@ packages=(
   dms
   dms-greeter
   glycin-thumbnailer
+  ghostty
   kanshi
   khal
   kf6-kimageformats
@@ -47,4 +48,3 @@ sed -i 's|^Exec=.*|Exec=bash -c "niri-session > /dev/null 2>\&1"|' \
 
 sed -i 's|^Exec=.*|Exec=bash -c "mango -s mango-session > /dev/null 2>\&1"|' \
   /usr/share/wayland-sessions/mango.desktop
-

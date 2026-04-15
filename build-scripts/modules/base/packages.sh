@@ -87,6 +87,10 @@ packages=(
   power-profiles-daemon
   thermald
 
+  # Shells
+  zsh
+  fish
+
   # System / Utilities
   fuse
   fuse-common
@@ -120,6 +124,7 @@ packages=(
   firewall-config
   flatpak
   glx-utils
+  nodejs
   tailscale
   v4l2loopback
 )

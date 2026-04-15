@@ -5,12 +5,24 @@ shopt -s nullglob
 KVER=$(ls /usr/lib/modules | head -n1)
 KIMAGE="/usr/lib/modules/$KVER/vmlinuz"
 SIGN_DIR="/secureboot"
+KEY_FILE="$SIGN_DIR/MOK.key"
+CERT_FILE="$SIGN_DIR/MOK.pem"
+
+if [[ ! -f "$KEY_FILE" ]]; then
+  echo "Secure Boot signing key not found at $KEY_FILE; skipping kernel and module signing."
+  exit 0
+fi
+
+if [[ ! -f "$CERT_FILE" ]]; then
+  echo "Secure Boot certificate not found at $CERT_FILE; skipping kernel and module signing."
+  exit 0
+fi
 
 dnf5 -y install sbsigntools
 
 sbsign \
-  --key "$SIGN_DIR/MOK.key" \
-  --cert "$SIGN_DIR/MOK.pem" \
+  --key "$KEY_FILE" \
+  --cert "$CERT_FILE" \
   --output "${KIMAGE}.signed" \
   "$KIMAGE"
 mv "${KIMAGE}.signed" "$KIMAGE"
@@ -26,7 +38,7 @@ find "/lib/modules/$KVER" -type f -name '*.ko.xz' -print0 | while IFS= read -r -
   fi
 
   /usr/src/kernels/"$KVER"/scripts/sign-file \
-    sha512 "$SIGN_DIR/MOK.key" "$SIGN_DIR/MOK.pem" "$uncompressed" || true
+    sha512 "$KEY_FILE" "$CERT_FILE" "$uncompressed" || true
   rm -f "$comp"
 
   if xz -z "$uncompressed"; then
@@ -36,4 +48,4 @@ find "/lib/modules/$KVER" -type f -name '*.ko.xz' -print0 | while IFS= read -r -
   fi
 done
 
-rm -f "$SIGN_DIR/MOK.key"
+rm -f "$KEY_FILE"
